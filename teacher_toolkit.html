@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tool-panel {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tool-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pomodoro Timer Styles */
+        .pomodoro-container {
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 30px 0;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .timer-settings {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-group input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* Todo List Styles */
+        .todo-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .todo-time-input {
+            width: 120px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .todo-item:not(.completed):hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .todo-text {
+            flex: 1;
+        }
+
+        .todo-timer {
+            font-size: 14px;
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Student Picker Styles */
+        .student-tools {
+            text-align: center;
+        }
+
+        .student-input-section {
+            margin-bottom: 30px;
+        }
+
+        .student-input {
+            width: 300px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .student-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .student-tag {
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .student-tag.selected {
+            background: #ffd700;
+            border-color: #ffb700;
+            transform: scale(1.1);
+        }
+
+        .remove-student {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .picker-result {
+            margin: 30px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            min-height: 40px;
+        }
+
+        .groups-container {
+            margin-top: 30px;
+        }
+
+        .group {
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .group-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        /* Schedule Styles */
+        .schedule-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .schedule-input-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .schedule-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .current-lesson {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .current-lesson h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .countdown-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .schedule-list {
+            list-style: none;
+        }
+
+        .schedule-item {
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-item.current {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .schedule-item.next {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+
+        .schedule-item.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+            opacity: 0.7;
+        }
+
+        .schedule-time {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 1s ease;
+            border-radius: 4px;
+        }
+
+        .footer-link {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #667eea;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .footer-link:hover {
+            background: rgba(255,255,255,1);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .timer-display {
+                font-size: 3rem;
+            }
+            
+            .countdown-display {
+                font-size: 2rem;
+            }
+            
+            .schedule-form {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .student-input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .footer-link {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                margin: 20px auto;
+                display: block;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍎 Teacher Toolkit</h1>
+            <p>Complete classroom management suite</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTool('pomodoro', this)">⏰ Pomodoro Timer</button>
+            <button class="tab-btn" onclick="showTool('todo', this)">📝 To-Do List</button>
+            <button class="tab-btn" onclick="showTool('picker', this)">👥 Student Tools</button>
+            <button class="tab-btn" onclick="showTool('schedule', this)">📅 Class Schedule</button>
+        </div>
+
+        <!-- Pomodoro Timer Panel -->
+        <div id="pomodoro" class="tool-panel active">
+            <div class="pomodoro-container">
+                <h2>🍅 Pomodoro Timer</h2>
+                <div class="timer-display" id="pomodoroDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button class="btn success" onclick="startPomodoro()">Start</button>
+                    <button class="btn danger" onclick="pausePomodoro()">Pause</button>
+                    <button class="btn" onclick="resetPomodoro()">Reset</button>
+                </div>
+                <div class="timer-settings">
+                    <div class="input-group">
+                        <label>Work (min)</label>
+                        <input type="number" id="workTime" value="25" min="1" max="60">
+                    </div>
+                    <div class="input-group">
+                        <label>Break (min)</label>
+                        <input type="number" id="breakTime" value="5" min="1" max="30">
+                    </div>
+                </div>
+                <div id="pomodoroStatus" style="margin-top: 20px; font-size: 18px; font-weight: bold;">Ready to work! 💪</div>
+            </div>
+        </div>
+
+        <!-- Todo List Panel -->
+        <div id="todo" class="tool-panel">
+            <div class="todo-container">
+                <h2>📝 Shared To-Do List</h2>
+                <p style="text-align: center; margin-bottom: 20px; color: #666;">Tasks automatically complete after set time</p>
+                
+                <div class="todo-input-group">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Enter a task for students...">
+                    <input type="number" class="todo-time-input" id="todoTimeInput" placeholder="Minutes" min="1" value="5">
+                    <button class="btn" onclick="addTodo()">Add Task</button>
+                </div>
+                
+                <ul class="todo-list" id="todoList"></ul>
+            </div>
+        </div>
+
+        <!-- Student Picker Panel -->
+        <div id="picker" class="tool-panel">
+            <div class="student-tools">
+                <h2>👥 Student Tools</h2>
+                
+                <div class="student-input-section">
+                    <input type="text" class="student-input" id="studentInput" placeholder="Enter student name...">
+                    <button class="btn" onclick="addStudent()">Add Student</button>
+                </div>
+                
+                <div class="student-list" id="studentList"></div>
+                
+                <div style="margin: 30px 0;">
+                    <button class="btn success" onclick="pickRandomStudent()">🎲 Pick Random Student</button>
+                    <button class="btn" onclick="clearSelection()">Clear Selection</button>
+                </div>
+                
+                <div class="picker-result" id="pickerResult"></div>
+                
+                <div style="margin-top: 30px;">
+                    <h3>Create Groups</h3>
+                    <div style="margin: 15px 0;">
+                        <input type="number" id="groupSize" placeholder="Group size" min="2" max="6" value="3" style="width: 150px; padding: 10px; margin-right: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                        <button class="btn" onclick="createGroups()">🔀 Create Random Groups</button>
+                    </div>
+                    <div class="groups-container" id="groupsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Panel -->
+        <div id="schedule" class="tool-panel">
+            <div class="schedule-container">
+                <h2>📅 Class Schedule & Live Timer</h2>
+                
+                <div class="schedule-input-section">
+                    <h3>Add Learning Activity</h3>
+                    <div class="schedule-form">
+                        <input type="text" class="schedule-input" id="lessonName" placeholder="Activity name...">
+                        <input type="time" class="schedule-input" id="lessonStart">
+                        <input type="number" class="schedule-input" id="lessonDuration" placeholder="Duration (min)" min="1" value="45">
+                        <button class="btn" onclick="addLesson()">Add Activity</button>
+                    </div>
+                </div>
+                
+                <div class="current-lesson" id="currentLesson" style="display: none;">
+                    <h3 id="currentLessonName">Current Lesson</h3>
+                    <div class="countdown-display" id="lessonCountdown">00:00</div>
+                    <div id="lessonProgress">Time remaining</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0; text-align: center;">
+                    <button class="btn success" onclick="startSchedule()">▶️ Start Schedule</button>
+                    <button class="btn danger" onclick="stopSchedule()">⏹️ Stop Schedule</button>
+                    <button class="btn" onclick="clearSchedule()">🗑️ Clear All</button>
+                </div>
+                
+                <ul class="schedule-list" id="scheduleList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://www.teacherspayteachers.com/store/the-course-ranch" target="_blank" class="footer-link">
+        For more lessons and activities, please visit: The Course Ranch TPT Store
+    </a>
+
+    <script>
+        // Global variables
+        let pomodoroInterval;
+        let pomodoroSeconds = 25 * 60;
+        let isPomodoroPaused = true;
+        let isWorkSession = true;
+        
+        let students = [];
+        let todos = [];
+        let todoId = 0;
+        let todoTimers = {}; // Store active timers for each todo
+        
+        let schedule = [];
+        let scheduleInterval;
+        let scheduleStartTime;
+        let isScheduleRunning = false;
+
+        // Tab switching
+        function showTool(toolName, buttonElement) {
+            // Hide all panels
+            document.querySelectorAll('.tool-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected panel and activate tab
+            document.getElementById(toolName).classList.add('active');
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            }
+        }
+
+        // Pomodoro Timer Functions
+        function updatePomodoroDisplay() {
+            const minutes = Math.floor(pomodoroSeconds / 60);
+            const seconds = pomodoroSeconds % 60;
+            document.getElementById('pomodoroDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startPomodoro() {
+            if (isPomodoroPaused) {
+                isPomodoroPaused = false;
+                pomodoroInterval = setInterval(() => {
+                    pomodoroSeconds--;
+                    updatePomodoroDisplay();
+                    
+                    if (pomodoroSeconds <= 0) {
+                        clearInterval(pomodoroInterval);
+                        isPomodoroPaused = true;
+                        
+                        if (isWorkSession) {
+                            document.getElementById('pomodoroStatus').textContent = "Break time! 🎉";
+                            pomodoroSeconds = parseInt(document.getElementById('breakTime').value) * 60;
+                            isWorkSession = false;
+                        } else {
+                            document.getElementById('pomodoroStatus').textContent = "Back to work! 💪";
+                            pomodoroSeconds = parseInt(document.getElementById('workTime').value) * 60;
+                            isWorkSession = true;
+                        }
+                        updatePomodoroDisplay();
+                        
+                        // Play notification sound (if supported)
+                        if (window.speechSynthesis) {
+                            const utterance = new SpeechSynthesisUtterance(isWorkSession ? "Work time!" : "Break time!");
+                            utterance.rate = 0.8;
+                            window.speechSynthesis.speak(utterance);
+                        }
+                    }
+                }, 1000);
+            }
+        }
+
+        function pausePomodoro() {
+            isPomodoroPaused = true;
+            clearInterval(pomodoroInterval);
+            document.getElementById('pomodoroStatus').textContent = "Paused ⏸️";
+        }
+
+        function resetPomodoro() {
+            isPomodoroPaused = true;
+            clearInterval(pomodoroInterval);
+            isWorkSession = true;
+            pomodoroSeconds = parseInt(document.getElementById('workTime').value) * 60;
+            updatePomodoroDisplay();
+            document.getElementById('pomodoroStatus').textContent = "Ready to work! 💪";
+        }
+
+        // Todo List Functions
+        function addTodo() {
+            const todoText = document.getElementById('todoInput').value.trim();
+            const todoTime = parseInt(document.getElementById('todoTimeInput').value);
+            
+            if (todoText && todoTime > 0) {
+                const todo = {
+                    id: todoId++,
+                    text: todoText,
+                    timeMinutes: todoTime,
+                    startTime: null,
+                    completed: false,
+                    started: false
+                };
+                
+                todos.push(todo);
+                document.getElementById('todoInput').value = '';
+                renderTodos();
+            }
+        }
+
+        function startTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo && !todo.started && !todo.completed) {
+                todo.started = true;
+                todo.startTime = Date.now();
+                renderTodos();
+                
+                // Set timer for auto-completion
+                todoTimers[id] = setTimeout(() => {
+                    completeTodo(id);
+                }, todo.timeMinutes * 60 * 1000);
+            }
+        }
+
+        function completeTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo && !todo.completed) {
+                todo.completed = true;
+                // Clear any existing timer
+                if (todoTimers[id]) {
+                    clearTimeout(todoTimers[id]);
+                    delete todoTimers[id];
+                }
+                renderTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            // Clear any existing timer
+            if (todoTimers[id]) {
+                clearTimeout(todoTimers[id]);
+                delete todoTimers[id];
+            }
+            todos = todos.filter(t => t.id !== id);
+            renderTodos();
+        }
+
+        function renderTodos() {
+            const todoList = document.getElementById('todoList');
+            todoList.innerHTML = '';
+            
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                
+                let statusText = '';
+                let actionButton = '';
+                
+                if (todo.completed) {
+                    statusText = '✅ Complete';
+                } else if (todo.started) {
+                    const timeRemaining = Math.max(0, todo.timeMinutes * 60 * 1000 - (Date.now() - todo.startTime));
+                    const totalSeconds = Math.ceil(timeRemaining / 1000);
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+                    
+                    if (totalSeconds > 0) {
+                        statusText = `⏰ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    } else {
+                        statusText = '⏰ 0:00';
+                    }
+                } else {
+                    statusText = `⏱️ ${todo.timeMinutes}:00 task`;
+                    actionButton = `<button class="btn" style="padding: 5px 10px; font-size: 12px; margin-right: 10px;" onclick="startTodo(${todo.id})">▶️ Start</button>`;
+                }
+                
+                li.innerHTML = `
+                    <span class="todo-text">${todo.text}</span>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="todo-timer">${statusText}</span>
+                        ${actionButton}
+                        <button class="delete-btn" onclick="deleteTodo(${todo.id})">×</button>
+                    </div>
+                `;
+                
+                todoList.appendChild(li);
+            });
+        }
+
+        // Student Tools Functions
+        function addStudent() {
+            const studentName = document.getElementById('studentInput').value.trim();
+            if (studentName && !students.includes(studentName)) {
+                students.push(studentName);
+                document.getElementById('studentInput').value = '';
+                renderStudents();
+            }
+        }
+
+        function removeStudent(name) {
+            students = students.filter(s => s !== name);
+            renderStudents();
+        }
+
+        function renderStudents() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            
+            students.forEach(student => {
+                const tag = document.createElement('div');
+                tag.className = 'student-tag';
+                tag.innerHTML = `
+                    <span>${student}</span>
+                    <button class="remove-student" onclick="removeStudent('${student}')">×</button>
+                `;
+                studentList.appendChild(tag);
+            });
+        }
+
+        function pickRandomStudent() {
+            if (students.length === 0) {
+                document.getElementById('pickerResult').textContent = 'Add students first!';
+                return;
+            }
+            
+            clearSelection();
+            const randomIndex = Math.floor(Math.random() * students.length);
+            const selectedStudent = students[randomIndex];
+            
+            document.getElementById('pickerResult').textContent = `Selected: ${selectedStudent} 🎉`;
+            
+            // Highlight selected student
+            const studentTags = document.querySelectorAll('.student-tag');
+            studentTags[randomIndex].classList.add('selected');
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.student-tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            document.getElementById('pickerResult').textContent = '';
+        }
+
+        function createGroups() {
+            const groupSize = parseInt(document.getElementById('groupSize').value);
+            if (students.length === 0 || groupSize < 2) return;
+            
+            const shuffled = [...students].sort(() => Math.random() - 0.5);
+            const groups = [];
+            
+            for (let i = 0; i < shuffled.length; i += groupSize) {
+                groups.push(shuffled.slice(i, i + groupSize));
+            }
+            
+            const groupsContainer = document.getElementById('groupsContainer');
+            groupsContainer.innerHTML = '';
+            
+            groups.forEach((group, index) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group';
+                groupDiv.innerHTML = `
+                    <div class="group-title">Group ${index + 1}</div>
+                    <div>${group.join(', ')}</div>
+                `;
+                groupsContainer.appendChild(groupDiv);
+            });
+        }
+
+        // Schedule Functions
+        function addLesson() {
+            const name = document.getElementById('lessonName').value.trim();
+            const start = document.getElementById('lessonStart').value;
+            const duration = parseInt(document.getElementById('lessonDuration').value);
+            
+            if (name && start && duration > 0) {
+                const lesson = {
+                    name,
+                    start,
+                    duration,
+                    startTime: null,
+                    endTime: null
+                };
+                
+                schedule.push(lesson);
+                schedule.sort((a, b) => a.start.localeCompare(b.start));
+                
+                document.getElementById('lessonName').value = '';
+                document.getElementById('lessonStart').value = '';
+                document.getElementById('lessonDuration').value = '45';
+                
+                renderSchedule();
+            }
+        }
+
+        function renderSchedule() {
+            const scheduleList = document.getElementById('scheduleList');
+            scheduleList.innerHTML = '';
+            
+            schedule.forEach((lesson, index) => {
+                const li = document.createElement('li');
+                li.className = 'schedule-item';
+                
+                const endTime = new Date();
+                const [hours, minutes] = lesson.start.split(':');
+                endTime.setHours(parseInt(hours), parseInt(minutes) + lesson.duration, 0, 0);
+                
+                li.innerHTML = `
+                    <div>
+                        <strong>${lesson.name}</strong><br>
+                        <span class="schedule-time">${lesson.start} - ${endTime.toTimeString().slice(0, 5)} (${lesson.duration}min)</span>
+                    </div>
+                    <button class="delete-btn" onclick="removeLesson(${index})">×</button>
+                `;
+                
+                scheduleList.appendChild(li);
+            });
+        }
+
+        function removeLesson(index) {
+            schedule.splice(index, 1);
+            renderSchedule();
+        }
+
+        function clearSchedule() {
+            schedule = [];
+            stopSchedule();
+            renderSchedule();
+        }
+
+        function startSchedule() {
+            if (schedule.length === 0) return;
+            
+            isScheduleRunning = true;
+            scheduleStartTime = Date.now();
+            document.getElementById('currentLesson').style.display = 'block';
+            
+            scheduleInterval = setInterval(updateScheduleTimer, 1000);
+            updateScheduleTimer();
+        }
+
+        function stopSchedule() {
+            isScheduleRunning = false;
+            clearInterval(scheduleInterval);
+            document.getElementById('currentLesson').style.display = 'none';
+        }
+
+        function updateScheduleTimer() {
+            if (!isScheduleRunning) return;
+            
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            let currentLesson = null;
+            let nextLesson = null;
+            
+            for (let i = 0; i < schedule.length; i++) {
+                const lesson = schedule[i];
+                const [hours, minutes] = lesson.start.split(':');
+                const lessonStartMinutes = parseInt(hours) * 60 + parseInt(minutes);
+                const lessonEndMinutes = lessonStartMinutes + lesson.duration;
+                
+                if (currentTime >= lessonStartMinutes && currentTime < lessonEndMinutes) {
+                    currentLesson = lesson;
+                    nextLesson = schedule[i + 1] || null;
+                    break;
+                } else if (currentTime < lessonStartMinutes) {
+                    nextLesson = lesson;
+                    break;
+                }
+            }
+            
+            if (currentLesson) {
+                const [hours, minutes] = currentLesson.start.split(':');
+                const lessonStartMinutes = parseInt(hours) * 60 + parseInt(minutes);
+                const lessonEndMinutes = lessonStartMinutes + currentLesson.duration;
+                const remainingMinutes = lessonEndMinutes - currentTime;
+                const remainingSeconds = 60 - now.getSeconds();
+                
+                document.getElementById('currentLessonName').textContent = currentLesson.name;
+                document.getElementById('lessonCountdown').textContent = 
+                    `${Math.floor(remainingMinutes)}:${(remainingSeconds).toString().padStart(2, '0')}`;
+                document.getElementById('lessonProgress').textContent = `${remainingMinutes} minutes remaining`;
+                
+                // Update progress bar
+                const totalDuration = currentLesson.duration;
+                const elapsed = currentTime - lessonStartMinutes;
+                const progressPercent = (elapsed / totalDuration) * 100;
+                document.getElementById('progressFill').style.width = `${Math.min(progressPercent, 100)}%`;
+                
+                // Update schedule item styling
+                updateScheduleItemStyling(currentLesson, nextLesson);
+            } else if (nextLesson) {
+                document.getElementById('currentLessonName').textContent = 'Break Time';
+                const [nextHours, nextMinutes] = nextLesson.start.split(':');
+                const nextLessonStartMinutes = parseInt(nextHours) * 60 + parseInt(nextMinutes);
+                const minutesToNext = nextLessonStartMinutes - currentTime;
+                
+                document.getElementById('lessonCountdown').textContent = 
+                    `${Math.floor(minutesToNext)}:00`;
+                document.getElementById('lessonProgress').textContent = `Next: ${nextLesson.name} in ${minutesToNext} minutes`;
+                document.getElementById('progressFill').style.width = '0%';
+                
+                updateScheduleItemStyling(null, nextLesson);
+            } else {
+                document.getElementById('currentLessonName').textContent = 'Day Complete!';
+                document.getElementById('lessonCountdown').textContent = '🎉';
+                document.getElementById('lessonProgress').textContent = 'All lessons finished for today';
+                document.getElementById('progressFill').style.width = '100%';
+                
+                updateScheduleItemStyling(null, null);
+            }
+        }
+        
+        function updateScheduleItemStyling(currentLesson, nextLesson) {
+            const scheduleItems = document.querySelectorAll('.schedule-item');
+            scheduleItems.forEach((item, index) => {
+                item.classList.remove('current', 'next', 'completed');
+                
+                if (currentLesson && schedule[index] === currentLesson) {
+                    item.classList.add('current');
+                } else if (nextLesson && schedule[index] === nextLesson) {
+                    item.classList.add('next');
+                } else {
+                    const now = new Date();
+                    const currentTime = now.getHours() * 60 + now.getMinutes();
+                    const [hours, minutes] = schedule[index].start.split(':');
+                    const lessonEndMinutes = parseInt(hours) * 60 + parseInt(minutes) + schedule[index].duration;
+                    
+                    if (currentTime > lessonEndMinutes) {
+                        item.classList.add('completed');
+                    }
+                }
+            });
+        }
+
+        // Event listeners
+        document.getElementById('studentInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addStudent();
+            }
+        });
+
+        document.getElementById('todoInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTodo();
+            }
+        });
+
+        document.getElementById('lessonName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addLesson();
+            }
+        });
+
+        // Initialize with some sample data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default lesson start time to current time
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                             now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('lessonStart').value = timeString;
+        });
+
+    </script>
+</body>
+</html>
